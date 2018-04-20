@@ -34,21 +34,21 @@ echo "Sleeping to allow time for initialisation"
 sleep 3
 
 echo "Clustering containers"
-#可根据需求将节点更改为内存节点,增加: --ram
+#可根据需求将节点更改为内存节点, 增加: --ram
 docker exec $NODE2 bash -c \
 	"rabbitmqctl stop_app && \
 	rabbitmqctl join_cluster $NODE1@$NODE1 && \
-	rabbitmqctl start_app" &
+	rabbitmqctl start_app"
+wait
+
 docker exec $NODE3 bash -c \
 	"rabbitmqctl stop_app && \
 	rabbitmqctl join_cluster --ram $NODE1@$NODE1 && \
-	rabbitmqctl start_app" &
-
+	rabbitmqctl start_app"
 wait
 
 echo "Setting cluster to High Availability"
-#生产环境不建议这样设置，应该逐个设置需要进行镜像复制的队列
-docker exec $NODE1 rabbitmqctl set_policy HA '^(?!amq\.).*' '{"ha-mode": "all"}'
+docker exec $NODE1 rabbitmqctl set_policy ha-all "^" '{"ha-mode":"all"}'
 
 echo
 echo "Finished, cluster running!!!"

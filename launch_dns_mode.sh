@@ -36,7 +36,7 @@ echo "Sleeping to allow time for initialisation"
 sleep 3
 
 echo "Clustering containers"
-#可根据需求将节点更改为内存节点,增加: --ram
+#可根据需求将节点更改为内存节点, 增加: --ram
 docker exec $NODE2 bash -c \
 	"rabbitmqctl stop_app && \
 	rabbitmqctl join_cluster $NODE1@$NODE1 && \
